@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guía Rápida de HTML5 – Tarea 03</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --red:#cc0000;--red-dark:#880000;--red-light:#ff3333;--red-glow:rgba(204,0,0,.3);
+      --orange:#e44d26;--orange-dark:#b83d1c;
+      --bg:#111314;--card:#222527;--border:rgba(255,255,255,.07);
+      --white:#f0eeeb;--gray:#999;
+      --code-bg:#0d1117;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;}
+
+    nav{position:sticky;top:0;z-index:100;background:rgba(17,19,20,.93);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:16px;}
+    nav a.back{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--red-light);
+      text-decoration:none;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
+    nav a.back:hover{opacity:.7;}
+    nav a.back::before{content:'←';font-size:1rem;}
+    nav .nav-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.25em;color:var(--gray);}
+    nav .nav-tag{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.2em;
+      color:var(--red);border:1px solid var(--red-dark);padding:3px 10px;border-radius:2px;}
+
+    /* HERO con acento naranja HTML */
+    .hero-wrap{background:linear-gradient(135deg,#0d0d0d 0%,#7a2300 45%,#1a0800 100%);border-bottom:1px solid rgba(228,77,38,.35);}
+    .hero{max-width:1100px;margin:0 auto;padding:70px 40px 60px;display:grid;grid-template-columns:1fr 260px;align-items:center;gap:48px;position:relative;overflow:hidden;}
+    .hero::before{content:'</>';position:absolute;right:320px;top:50%;transform:translateY(-50%);
+      font-family:'Share Tech Mono',monospace;font-size:10rem;color:rgba(228,77,38,.06);pointer-events:none;white-space:nowrap;}
+    .hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.4em;color:rgba(255,255,255,.5);margin-bottom:12px;}
+    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5.5rem);line-height:.95;color:#fff;}
+    .hero-title em{display:block;color:#f16529;font-style:normal;}
+    .hero-lead{font-size:1rem;font-weight:500;line-height:1.65;color:rgba(255,255,255,.72);margin-top:18px;max-width:480px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;margin-top:20px;
+      background:rgba(228,77,38,.15);border:1px solid rgba(228,77,38,.4);
+      border-radius:4px;padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:#f16529;}
+    .hero-img img{width:100%;border-radius:8px;box-shadow:0 16px 50px rgba(0,0,0,.7),0 0 0 2px #7a2300;}
+
+    .content{max-width:1100px;margin:0 auto;padding:60px 40px;display:flex;flex-direction:column;gap:64px;}
+    .section-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.05em;color:var(--white);margin-bottom:24px;position:relative;padding-bottom:16px;}
+    .section-title::after{content:'';position:absolute;bottom:0;left:0;width:48px;height:3px;background:#e44d26;border-radius:2px;}
+
+    /* ESTRUCTURA */
+    .structure-demo{background:var(--code-bg);border:1px solid rgba(228,77,38,.25);border-radius:8px;padding:28px;overflow-x:auto;}
+    .structure-demo pre{font-family:'Share Tech Mono',monospace;font-size:.82rem;line-height:1.8;color:#cdd9e5;}
+    .tag-name{color:#f16529;}
+    .tag-attr{color:#79c0ff;}
+    .tag-value{color:#a5d6ff;}
+    .tag-comment{color:#8b949e;}
+    .tag-text{color:#adbac7;}
+    .tag-doctype{color:#e8cc00;}
+
+    /* ELEMENTOS en cards */
+    .elem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+    .elem-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;
+      transition:border-color .2s,transform .2s;}
+    .elem-card:hover{border-color:rgba(228,77,38,.5);transform:translateY(-3px);}
+    .elem-tag{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#f16529;
+      background:rgba(228,77,38,.1);padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+    .elem-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.04em;color:var(--white);margin-bottom:6px;}
+    .elem-desc{font-size:.85rem;font-weight:500;line-height:1.6;color:rgba(240,238,235,.6);}
+
+    /* ATRIBUTOS */
+    .attr-table{width:100%;border-collapse:collapse;}
+    .attr-table th{font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--gray);padding:12px 16px;border-bottom:2px solid rgba(228,77,38,.4);text-align:left;}
+    .attr-table td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:.88rem;font-weight:500;color:rgba(240,238,235,.75);}
+    .attr-table tr:hover td{background:rgba(228,77,38,.04);}
+    .attr-name{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#f16529;}
+    .attr-val{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:#79c0ff;}
+
+    /* EJEMPLO CÓDIGO */
+    .code-block{background:var(--code-bg);border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden;}
+    .code-header{background:rgba(255,255,255,.04);padding:10px 20px;display:flex;align-items:center;gap:8px;
+      font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--gray);}
+    .code-dot{width:10px;height:10px;border-radius:50%;}
+    .code-block pre{padding:24px;font-family:'Share Tech Mono',monospace;font-size:.8rem;line-height:1.85;color:#cdd9e5;overflow-x:auto;}
+
+    /* SEMÁNTICA */
+    .semantic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
+    .sem-card{background:var(--card);border:1px solid rgba(228,77,38,.2);border-radius:6px;padding:18px;text-align:center;}
+    .sem-tag{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:#f16529;margin-bottom:8px;display:block;}
+    .sem-desc{font-size:.82rem;font-weight:500;color:rgba(240,238,235,.6);line-height:1.5;}
+
+    footer{background:#0a0b0c;border-top:2px solid var(--red-dark);padding:24px 40px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .footer-school{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.06em;color:var(--white);}
+    .footer-meta{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gray);text-align:right;}
+    .footer-meta span{color:var(--red);}
+
+    @media(max-width:700px){
+      .hero{grid-template-columns:1fr;padding:50px 24px;}
+      .hero-img{display:none;}
+      .content{padding:40px 24px;}
+      footer{flex-direction:column;text-align:center;}
+      .footer-meta{text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="back" href="portafolio.html">Volver al portafolio</a>
+  <span class="nav-title">Cultura Digital 2 / Tarea 03</span>
+  <span class="nav-tag">ACTIVIDAD 03</span>
+</nav>
+
+<div class="hero-wrap">
+  <div class="hero">
+    <div>
+      <p class="hero-eyebrow">actividad 03 — guía rápida</p>
+      <h1 class="hero-title">Guía Rápida<em>HTML 5</em></h1>
+      <p class="hero-lead">HyperText Markup Language 5 es el estándar mundial para estructurar contenido en la web. Con HTML defines el esqueleto de cualquier página: su texto, imágenes, vínculos y formularios.</p>
+      <div class="hero-badge">⚡ Versión 5 — Estándar W3C</div>
+    </div>
+    <div class="hero-img">
+      <img src="data:image/png;base64,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" alt="HTML5 Logo"/>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ESTRUCTURA BASE -->
+  <section>
+    <p class="section-label">// sección 01</p>
+    <h2 class="section-title">Estructura Base de un Documento</h2>
+    <div class="structure-demo">
+      <pre><span class="tag-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag-name">&lt;html</span> <span class="tag-attr">lang</span>=<span class="tag-value">"es"</span><span class="tag-name">&gt;</span>
+  <span class="tag-name">&lt;head&gt;</span>
+    <span class="tag-name">&lt;meta</span> <span class="tag-attr">charset</span>=<span class="tag-value">"UTF-8"</span><span class="tag-name">/&gt;</span>
+    <span class="tag-name">&lt;meta</span> <span class="tag-attr">name</span>=<span class="tag-value">"viewport"</span> <span class="tag-attr">content</span>=<span class="tag-value">"width=device-width, initial-scale=1.0"</span><span class="tag-name">/&gt;</span>
+    <span class="tag-name">&lt;title&gt;</span><span class="tag-text">Mi primera página web</span><span class="tag-name">&lt;/title&gt;</span>
+  <span class="tag-name">&lt;/head&gt;</span>
+  <span class="tag-name">&lt;body&gt;</span>
+    <span class="tag-comment">&lt;!-- Aquí va el contenido visible de la página --&gt;</span>
+    <span class="tag-name">&lt;h1&gt;</span><span class="tag-text">¡Hola, mundo!</span><span class="tag-name">&lt;/h1&gt;</span>
+    <span class="tag-name">&lt;p&gt;</span><span class="tag-text">Mi primer párrafo en HTML.</span><span class="tag-name">&lt;/p&gt;</span>
+  <span class="tag-name">&lt;/body&gt;</span>
+<span class="tag-name">&lt;/html&gt;</span></pre>
+    </div>
+  </section>
+
+  <!-- ETIQUETAS ESENCIALES -->
+  <section>
+    <p class="section-label">// sección 02</p>
+    <h2 class="section-title">Etiquetas Esenciales</h2>
+    <div class="elem-grid">
+      <div class="elem-card">
+        <span class="elem-tag">&lt;h1&gt; – &lt;h6&gt;</span>
+        <p class="elem-title">Encabezados</p>
+        <p class="elem-desc">Define los títulos de la página. H1 es el más importante y H6 el menos. Solo debe existir un H1 por página.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;p&gt;</span>
+        <p class="elem-title">Párrafo</p>
+        <p class="elem-desc">Agrupa texto en bloques de párrafo. Es el elemento más común para presentar texto en una página web.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;a&gt;</span>
+        <p class="elem-title">Enlace / Hipervínculo</p>
+        <p class="elem-desc">Crea un enlace a otra página, sección o recurso. Usa el atributo href para indicar el destino del enlace.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;img&gt;</span>
+        <p class="elem-title">Imagen</p>
+        <p class="elem-desc">Inserta una imagen en la página. Requiere src para la ruta y alt para el texto alternativo accesible.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;div&gt;</span>
+        <p class="elem-title">Contenedor</p>
+        <p class="elem-desc">Elemento contenedor genérico sin significado semántico. Se usa para agrupar y aplicar estilos a bloques de contenido.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;span&gt;</span>
+        <p class="elem-title">Contenedor en línea</p>
+        <p class="elem-desc">Contenedor en línea sin significado semántico. Útil para aplicar estilos a fragmentos de texto dentro de un párrafo.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;ul&gt; / &lt;ol&gt;</span>
+        <p class="elem-title">Listas</p>
+        <p class="elem-desc">ul crea listas sin orden (bullets) y ol crea listas ordenadas (numeradas). Los elementos van dentro de etiquetas &lt;li&gt;.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;form&gt;</span>
+        <p class="elem-title">Formulario</p>
+        <p class="elem-desc">Define un formulario interactivo para recopilar datos del usuario, como nombres, correos o contraseñas.</p>
+      </div>
+      <div class="elem-card">
+        <span class="elem-tag">&lt;table&gt;</span>
+        <p class="elem-title">Tabla</p>
+        <p class="elem-desc">Organiza datos en filas y columnas. Usa tr para filas, th para encabezados y td para celdas de datos.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ETIQUETAS SEMÁNTICAS HTML5 -->
+  <section>
+    <p class="section-label">// sección 03</p>
+    <h2 class="section-title">Etiquetas Semánticas HTML5</h2>
+    <p style="font-size:.95rem;font-weight:500;line-height:1.7;color:rgba(240,238,235,.7);margin-bottom:24px;max-width:750px;">
+      HTML5 introdujo etiquetas semánticas que describen el significado del contenido, mejorando la accesibilidad y el SEO.
+    </p>
+    <div class="semantic-grid">
+      <div class="sem-card"><span class="sem-tag">&lt;header&gt;</span><p class="sem-desc">Encabezado de la página o sección</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;nav&gt;</span><p class="sem-desc">Menú de navegación principal</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;main&gt;</span><p class="sem-desc">Contenido principal único</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;section&gt;</span><p class="sem-desc">Sección temática del documento</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;article&gt;</span><p class="sem-desc">Contenido independiente y reutilizable</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;aside&gt;</span><p class="sem-desc">Contenido secundario o barra lateral</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;footer&gt;</span><p class="sem-desc">Pie de página o sección</p></div>
+      <div class="sem-card"><span class="sem-tag">&lt;figure&gt;</span><p class="sem-desc">Imagen con su descripción</p></div>
+    </div>
+  </section>
+
+  <!-- ATRIBUTOS COMUNES -->
+  <section>
+    <p class="section-label">// sección 04</p>
+    <h2 class="section-title">Atributos Más Usados</h2>
+    <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border);">
+      <table class="attr-table">
+        <thead>
+          <tr><th>Atributo</th><th>Etiquetas donde se usa</th><th>Valor de ejemplo</th><th>Descripción</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="attr-name">id</span></td><td>Cualquier etiqueta</td><td><span class="attr-val">"mi-id"</span></td><td>Identificador único del elemento en la página</td></tr>
+          <tr><td><span class="attr-name">class</span></td><td>Cualquier etiqueta</td><td><span class="attr-val">"btn rojo"</span></td><td>Clase CSS para aplicar estilos al elemento</td></tr>
+          <tr><td><span class="attr-name">href</span></td><td>&lt;a&gt;</td><td><span class="attr-val">"https://..."</span></td><td>URL de destino del enlace</td></tr>
+          <tr><td><span class="attr-name">src</span></td><td>&lt;img&gt; &lt;script&gt;</td><td><span class="attr-val">"foto.jpg"</span></td><td>Ruta del recurso a cargar</td></tr>
+          <tr><td><span class="attr-name">alt</span></td><td>&lt;img&gt;</td><td><span class="attr-val">"Foto de perfil"</span></td><td>Texto alternativo accesible para imágenes</td></tr>
+          <tr><td><span class="attr-name">type</span></td><td>&lt;input&gt; &lt;button&gt;</td><td><span class="attr-val">"text" "email"</span></td><td>Define el tipo de campo en un formulario</td></tr>
+          <tr><td><span class="attr-name">style</span></td><td>Cualquier etiqueta</td><td><span class="attr-val">"color:red;"</span></td><td>Aplica estilos CSS directamente en la etiqueta</td></tr>
+          <tr><td><span class="attr-name">target</span></td><td>&lt;a&gt;</td><td><span class="attr-val">"_blank"</span></td><td>Abre el enlace en una nueva pestaña del navegador</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- EJEMPLO COMPLETO -->
+  <section>
+    <p class="section-label">// sección 05</p>
+    <h2 class="section-title">Ejemplo Completo</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dot" style="background:#ff5f56;"></div>
+        <div class="code-dot" style="background:#ffbd2e;"></div>
+        <div class="code-dot" style="background:#27c93f;"></div>
+        <span style="margin-left:8px;">index.html</span>
+      </div>
+      <pre><span class="tag-doctype">&lt;!DOCTYPE html&gt;</span>
+<span class="tag-name">&lt;html</span> <span class="tag-attr">lang</span>=<span class="tag-value">"es"</span><span class="tag-name">&gt;</span>
+<span class="tag-name">&lt;head&gt;</span>
+  <span class="tag-name">&lt;meta</span> <span class="tag-attr">charset</span>=<span class="tag-value">"UTF-8"</span><span class="tag-name">/&gt;</span>
+  <span class="tag-name">&lt;title&gt;</span><span class="tag-text">Mi Portafolio</span><span class="tag-name">&lt;/title&gt;</span>
+<span class="tag-name">&lt;/head&gt;</span>
+<span class="tag-name">&lt;body&gt;</span>
+  <span class="tag-name">&lt;header&gt;</span>
+    <span class="tag-name">&lt;h1&gt;</span><span class="tag-text">Luis Fernando</span><span class="tag-name">&lt;/h1&gt;</span>
+    <span class="tag-name">&lt;nav&gt;</span>
+      <span class="tag-name">&lt;a</span> <span class="tag-attr">href</span>=<span class="tag-value">"#inicio"</span><span class="tag-name">&gt;</span><span class="tag-text">Inicio</span><span class="tag-name">&lt;/a&gt;</span>
+      <span class="tag-name">&lt;a</span> <span class="tag-attr">href</span>=<span class="tag-value">"#tareas"</span><span class="tag-name">&gt;</span><span class="tag-text">Tareas</span><span class="tag-name">&lt;/a&gt;</span>
+    <span class="tag-name">&lt;/nav&gt;</span>
+  <span class="tag-name">&lt;/header&gt;</span>
+  <span class="tag-name">&lt;main&gt;</span>
+    <span class="tag-name">&lt;section</span> <span class="tag-attr">id</span>=<span class="tag-value">"tareas"</span><span class="tag-name">&gt;</span>
+      <span class="tag-name">&lt;h2&gt;</span><span class="tag-text">Mis actividades</span><span class="tag-name">&lt;/h2&gt;</span>
+      <span class="tag-name">&lt;img</span> <span class="tag-attr">src</span>=<span class="tag-value">"portada.jpg"</span> <span class="tag-attr">alt</span>=<span class="tag-value">"Portada tarea"</span><span class="tag-name">/&gt;</span>
+      <span class="tag-name">&lt;p&gt;</span><span class="tag-text">Descripción de la actividad.</span><span class="tag-name">&lt;/p&gt;</span>
+    <span class="tag-name">&lt;/section&gt;</span>
+  <span class="tag-name">&lt;/main&gt;</span>
+  <span class="tag-name">&lt;footer&gt;</span>
+    <span class="tag-name">&lt;p&gt;</span><span class="tag-text">CBTis 144 — Cultura Digital 2</span><span class="tag-name">&lt;/p&gt;</span>
+  <span class="tag-name">&lt;/footer&gt;</span>
+<span class="tag-name">&lt;/body&gt;</span>
+<span class="tag-name">&lt;/html&gt;</span></pre>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div><p class="footer-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p></div>
+  <div class="footer-meta">
+    <p>Especialidad: <span>Inteligencia Artificial</span></p>
+    <p>Profesor: <span>Chirino Balcázar Jordy</span> &nbsp;|&nbsp; Alumno: <span>Luis Fernando</span></p>
+  </div>
+</footer>
+</body>
+</html>

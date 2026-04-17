@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Guía Rápida de CSS3 – Tarea 04</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root{
+      --red:#cc0000;--red-dark:#880000;
+      --blue:#264de4;--blue-light:#4e72ff;--blue-glow:rgba(38,77,228,.3);
+      --bg:#111314;--card:#222527;--border:rgba(255,255,255,.07);
+      --white:#f0eeeb;--gray:#999;--code-bg:#0d1117;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth;}
+    body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--white);min-height:100vh;}
+
+    nav{position:sticky;top:0;z-index:100;background:rgba(17,19,20,.93);backdrop-filter:blur(10px);
+      border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:16px;}
+    nav a.back{font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.2em;color:var(--red);
+      text-decoration:none;display:flex;align-items:center;gap:6px;transition:opacity .2s;}
+    nav a.back:hover{opacity:.7;}
+    nav a.back::before{content:'←';font-size:1rem;}
+    nav .nav-title{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.25em;color:var(--gray);}
+    nav .nav-tag{margin-left:auto;font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.2em;
+      color:var(--red);border:1px solid var(--red-dark);padding:3px 10px;border-radius:2px;}
+
+    /* HERO acento azul CSS */
+    .hero-wrap{background:linear-gradient(135deg,#0a0a14 0%,#0d1a6e 45%,#060d2e 100%);border-bottom:1px solid rgba(38,77,228,.35);}
+    .hero{max-width:1100px;margin:0 auto;padding:70px 40px 60px;display:grid;grid-template-columns:1fr 260px;align-items:center;gap:48px;position:relative;overflow:hidden;}
+    .hero::before{content:'{ }';position:absolute;right:300px;top:50%;transform:translateY(-50%);
+      font-family:'Share Tech Mono',monospace;font-size:9rem;color:rgba(38,77,228,.07);pointer-events:none;}
+    .hero-eyebrow{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.4em;color:rgba(255,255,255,.5);margin-bottom:12px;}
+    .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5.5rem);line-height:.95;color:#fff;}
+    .hero-title em{display:block;color:#6b8ef5;font-style:normal;}
+    .hero-lead{font-size:1rem;font-weight:500;line-height:1.65;color:rgba(255,255,255,.72);margin-top:18px;max-width:480px;}
+    .hero-badge{display:inline-flex;align-items:center;gap:8px;margin-top:20px;
+      background:rgba(38,77,228,.15);border:1px solid rgba(38,77,228,.4);
+      border-radius:4px;padding:8px 16px;font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:.15em;color:#6b8ef5;}
+    .hero-img img{width:100%;border-radius:8px;box-shadow:0 16px 50px rgba(0,0,0,.7),0 0 0 2px #0d1a6e;}
+
+    .content{max-width:1100px;margin:0 auto;padding:60px 40px;display:flex;flex-direction:column;gap:64px;}
+    .section-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.45em;text-transform:uppercase;color:var(--red);margin-bottom:8px;}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;letter-spacing:.05em;color:var(--white);margin-bottom:24px;position:relative;padding-bottom:16px;}
+    .section-title::after{content:'';position:absolute;bottom:0;left:0;width:48px;height:3px;background:var(--blue);border-radius:2px;}
+
+    /* SINTAXIS */
+    .syntax-box{background:var(--code-bg);border:1px solid rgba(38,77,228,.25);border-radius:8px;padding:32px;text-align:center;}
+    .syntax-visual{font-family:'Share Tech Mono',monospace;font-size:1.1rem;line-height:2.2;color:#cdd9e5;}
+    .s-selector{color:#6b8ef5;font-size:1.3rem;}
+    .s-prop{color:#79c0ff;}
+    .s-val{color:#a5d6ff;}
+    .s-brace{color:rgba(255,255,255,.35);}
+    .syntax-labels{display:flex;justify-content:center;gap:32px;margin-top:16px;flex-wrap:wrap;}
+    .syn-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gray);text-align:center;}
+    .syn-label span{display:block;font-size:.85rem;margin-bottom:4px;}
+
+    /* PROPIEDADES GRID */
+    .prop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
+    .prop-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;
+      transition:border-color .2s,transform .2s;position:relative;overflow:hidden;}
+    .prop-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--blue-light));}
+    .prop-card:hover{border-color:rgba(38,77,228,.5);transform:translateY(-3px);}
+    .prop-name{font-family:'Share Tech Mono',monospace;font-size:.8rem;color:#6b8ef5;
+      background:rgba(38,77,228,.1);padding:4px 10px;border-radius:3px;display:inline-block;margin-bottom:10px;}
+    .prop-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.04em;color:var(--white);margin-bottom:6px;}
+    .prop-desc{font-size:.85rem;font-weight:500;line-height:1.6;color:rgba(240,238,235,.6);}
+    .prop-example{margin-top:10px;font-family:'Share Tech Mono',monospace;font-size:.7rem;color:rgba(165,214,255,.7);background:rgba(0,0,0,.3);padding:6px 10px;border-radius:4px;}
+
+    /* SELECTORES */
+    .sel-table{width:100%;border-collapse:collapse;}
+    .sel-table th{font-family:'Share Tech Mono',monospace;font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--gray);padding:12px 16px;border-bottom:2px solid rgba(38,77,228,.4);text-align:left;}
+    .sel-table td{padding:13px 16px;border-bottom:1px solid var(--border);font-size:.88rem;font-weight:500;color:rgba(240,238,235,.75);}
+    .sel-table tr:hover td{background:rgba(38,77,228,.04);}
+    .sel-code{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:#6b8ef5;}
+
+    /* BOX MODEL */
+    .box-model{display:flex;justify-content:center;align-items:center;padding:32px;background:var(--code-bg);border-radius:8px;border:1px solid rgba(38,77,228,.2);}
+    .bm-outer{background:rgba(38,77,228,.08);border:2px dashed rgba(38,77,228,.4);padding:20px;border-radius:4px;text-align:center;position:relative;min-width:320px;}
+    .bm-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.2em;color:#6b8ef5;position:absolute;top:4px;left:8px;}
+    .bm-border{background:rgba(228,77,38,.08);border:2px solid rgba(228,77,38,.5);padding:16px;border-radius:2px;position:relative;}
+    .bm-border .bm-label{color:#f16529;}
+    .bm-padding{background:rgba(39,201,63,.08);border:2px dashed rgba(39,201,63,.4);padding:14px;position:relative;}
+    .bm-padding .bm-label{color:#6ee77a;}
+    .bm-content{background:rgba(38,77,228,.2);border:2px solid var(--blue);padding:14px 28px;border-radius:2px;
+      font-family:'Share Tech Mono',monospace;font-size:.75rem;color:#fff;white-space:nowrap;}
+
+    /* CODE BLOCK */
+    .code-block{background:var(--code-bg);border:1px solid rgba(255,255,255,.08);border-radius:8px;overflow:hidden;}
+    .code-header{background:rgba(255,255,255,.04);padding:10px 20px;display:flex;align-items:center;gap:8px;
+      font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.2em;color:var(--gray);}
+    .code-dot{width:10px;height:10px;border-radius:50%;}
+    .code-block pre{padding:24px;font-family:'Share Tech Mono',monospace;font-size:.8rem;line-height:1.85;color:#cdd9e5;overflow-x:auto;}
+    .cs-sel{color:#6b8ef5;}
+    .cs-prop{color:#79c0ff;}
+    .cs-val{color:#a5d6ff;}
+    .cs-comment{color:#8b949e;}
+    .cs-unit{color:#ffa657;}
+
+    /* FLEXBOX / GRID VISUAL */
+    .layout-demo{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+    .demo-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:20px;}
+    .demo-box h4{font-family:'Share Tech Mono',monospace;font-size:.68rem;letter-spacing:.2em;color:#6b8ef5;margin-bottom:14px;}
+    .flex-demo{display:flex;gap:8px;flex-wrap:wrap;}
+    .flex-item{background:rgba(38,77,228,.25);border:1px solid rgba(38,77,228,.5);border-radius:3px;padding:8px 12px;
+      font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#6b8ef5;}
+    .grid-demo{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
+    .grid-item{background:rgba(38,77,228,.2);border:1px solid rgba(38,77,228,.4);border-radius:3px;padding:10px;
+      font-family:'Share Tech Mono',monospace;font-size:.65rem;color:#6b8ef5;text-align:center;}
+    .grid-item.span2{grid-column:span 2;background:rgba(38,77,228,.35);}
+
+    footer{background:#0a0b0c;border-top:2px solid var(--red-dark);padding:24px 40px;
+      display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+    .footer-school{font-family:'Bebas Neue',sans-serif;font-size:.95rem;letter-spacing:.06em;color:var(--white);}
+    .footer-meta{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.15em;color:var(--gray);text-align:right;}
+    .footer-meta span{color:var(--red);}
+
+    @media(max-width:700px){
+      .hero{grid-template-columns:1fr;padding:50px 24px;}
+      .hero-img{display:none;}
+      .content{padding:40px 24px;}
+      .layout-demo{grid-template-columns:1fr;}
+      footer{flex-direction:column;text-align:center;}
+      .footer-meta{text-align:center;}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="back" href="portafolio.html">Volver al portafolio</a>
+  <span class="nav-title">Cultura Digital 2 / Tarea 04</span>
+  <span class="nav-tag">ACTIVIDAD 04</span>
+</nav>
+
+<div class="hero-wrap">
+  <div class="hero">
+    <div>
+      <p class="hero-eyebrow">actividad 04 — guía rápida</p>
+      <h1 class="hero-title">Guía Rápida<em>CSS 3</em></h1>
+      <p class="hero-lead">Cascading Style Sheets 3 es el lenguaje que da vida visual a la web. Con CSS controlas colores, tipografías, animaciones, layouts y todo lo que hace a una página hermosa y funcional.</p>
+      <div class="hero-badge">🎨 Versión 3 — Estándar W3C</div>
+    </div>
+    <div class="hero-img">
+      <img src="data:image/png;base64,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" alt="CSS3 Logo"/>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- SINTAXIS -->
+  <section>
+    <p class="section-label">// sección 01</p>
+    <h2 class="section-title">Sintaxis de CSS</h2>
+    <div class="syntax-box">
+      <div class="syntax-visual">
+        <span class="s-selector">h1</span>
+        <span class="s-brace"> { </span>
+        <span class="s-prop">color</span>
+        <span class="s-brace">: </span>
+        <span class="s-val">red</span>
+        <span class="s-brace">; &nbsp;</span>
+        <span class="s-prop">font-size</span>
+        <span class="s-brace">: </span>
+        <span class="s-val">2rem</span>
+        <span class="s-brace">; }</span>
+      </div>
+      <div class="syntax-labels">
+        <div class="syn-label"><span style="color:#6b8ef5;">▲</span>Selector</div>
+        <div class="syn-label"><span style="color:#79c0ff;">▲</span>Propiedad</div>
+        <div class="syn-label"><span style="color:#a5d6ff;">▲</span>Valor</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROPIEDADES -->
+  <section>
+    <p class="section-label">// sección 02</p>
+    <h2 class="section-title">Propiedades Esenciales</h2>
+    <div class="prop-grid">
+      <div class="prop-card">
+        <span class="prop-name">color</span>
+        <p class="prop-title">Color de texto</p>
+        <p class="prop-desc">Define el color del texto. Acepta nombres, códigos HEX, RGB, HSL y RGBA con transparencia.</p>
+        <div class="prop-example">color: #cc0000;<br>color: rgba(0,0,0,.8);</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">background</span>
+        <p class="prop-title">Fondo</p>
+        <p class="prop-desc">Controla el fondo: color sólido, imagen, degradado lineal o radial, con múltiples capas posibles.</p>
+        <div class="prop-example">background: linear-gradient(<br>&nbsp;&nbsp;135deg, #000, #cc0000);</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">font-size</span>
+        <p class="prop-title">Tamaño de fuente</p>
+        <p class="prop-desc">Define el tamaño del texto. Usa px, em, rem, % o vw/vh para tamaños responsivos y fluidos.</p>
+        <div class="prop-example">font-size: 1.2rem;<br>font-size: clamp(1rem,3vw,2rem);</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">margin / padding</span>
+        <p class="prop-title">Espaciado</p>
+        <p class="prop-desc">Margin es el espacio exterior al elemento. Padding es el espacio interior entre el borde y el contenido.</p>
+        <div class="prop-example">margin: 0 auto;<br>padding: 16px 24px;</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">display</span>
+        <p class="prop-title">Tipo de visualización</p>
+        <p class="prop-desc">Controla cómo se muestra el elemento: block, inline, flex, grid o none para ocultarlo.</p>
+        <div class="prop-example">display: flex;<br>display: grid;</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">border-radius</span>
+        <p class="prop-title">Bordes redondeados</p>
+        <p class="prop-desc">Redondea las esquinas de un elemento. Con 50% crea círculos perfectos a partir de elementos cuadrados.</p>
+        <div class="prop-example">border-radius: 8px;<br>border-radius: 50%;</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">transition</span>
+        <p class="prop-title">Transición suave</p>
+        <p class="prop-desc">Anima los cambios de propiedades CSS de forma fluida al interactuar con hover, focus u otros estados.</p>
+        <div class="prop-example">transition: all .3s ease;<br>transition: color .2s;</div>
+      </div>
+      <div class="prop-card">
+        <span class="prop-name">box-shadow</span>
+        <p class="prop-title">Sombra del elemento</p>
+        <p class="prop-desc">Agrega sombras alrededor de un elemento. Admite múltiples sombras separadas por coma para efectos complejos.</p>
+        <div class="prop-example">box-shadow: 0 4px 20px<br>&nbsp;&nbsp;rgba(0,0,0,.5);</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOX MODEL -->
+  <section>
+    <p class="section-label">// sección 03</p>
+    <h2 class="section-title">El Modelo de Caja (Box Model)</h2>
+    <p style="font-size:.95rem;font-weight:500;line-height:1.7;color:rgba(240,238,235,.7);margin-bottom:24px;max-width:700px;">
+      Todo elemento HTML es una caja rectangular compuesta de cuatro capas: contenido, padding, border y margin.
+    </p>
+    <div class="box-model">
+      <div class="bm-outer">
+        <span class="bm-label">MARGIN</span>
+        <div class="bm-border">
+          <span class="bm-label">BORDER</span>
+          <div class="bm-padding">
+            <span class="bm-label">PADDING</span>
+            <div class="bm-content">CONTENT</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SELECTORES -->
+  <section>
+    <p class="section-label">// sección 04</p>
+    <h2 class="section-title">Tipos de Selectores</h2>
+    <div style="overflow-x:auto;border-radius:8px;border:1px solid var(--border);">
+      <table class="sel-table">
+        <thead>
+          <tr><th>Selector</th><th>Sintaxis</th><th>Descripción</th><th>Ejemplo de uso</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Etiqueta</td><td><span class="sel-code">p { }</span></td><td>Selecciona todos los elementos de ese tipo</td><td>Estiliza todos los párrafos</td></tr>
+          <tr><td>Clase</td><td><span class="sel-code">.mi-clase { }</span></td><td>Selecciona elementos con ese atributo class</td><td>Estiliza botones con class="btn"</td></tr>
+          <tr><td>ID</td><td><span class="sel-code">#mi-id { }</span></td><td>Selecciona el elemento único con ese id</td><td>Estiliza el header principal</td></tr>
+          <tr><td>Universal</td><td><span class="sel-code">* { }</span></td><td>Selecciona todos los elementos de la página</td><td>Reset de estilos globales</td></tr>
+          <tr><td>Descendiente</td><td><span class="sel-code">nav a { }</span></td><td>Selecciona elementos hijos dentro de otro</td><td>Links dentro del nav</td></tr>
+          <tr><td>Pseudo-clase</td><td><span class="sel-code">a:hover { }</span></td><td>Estado especial del elemento</td><td>Cambiar color al pasar el mouse</td></tr>
+          <tr><td>Pseudo-elemento</td><td><span class="sel-code">p::first-line { }</span></td><td>Parte específica de un elemento</td><td>Primera línea de un párrafo</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FLEXBOX Y GRID -->
+  <section>
+    <p class="section-label">// sección 05</p>
+    <h2 class="section-title">Flexbox y CSS Grid</h2>
+    <div class="layout-demo">
+      <div class="demo-box">
+        <h4>// FLEXBOX — DISEÑO EN FILA/COLUMNA</h4>
+        <div class="flex-demo" style="margin-bottom:12px;">
+          <div class="flex-item">Item 1</div>
+          <div class="flex-item">Item 2</div>
+          <div class="flex-item">Item 3</div>
+        </div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#8b949e;line-height:1.8;">
+          display: flex;<br>
+          justify-content: space-between;<br>
+          align-items: center;<br>
+          gap: 8px;
+        </div>
+      </div>
+      <div class="demo-box">
+        <h4>// CSS GRID — DISEÑO EN CUADRÍCULA</h4>
+        <div class="grid-demo" style="margin-bottom:12px;">
+          <div class="grid-item span2">Ancho 2</div>
+          <div class="grid-item">Col 3</div>
+          <div class="grid-item">Col 1</div>
+          <div class="grid-item">Col 2</div>
+          <div class="grid-item">Col 3</div>
+        </div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:.7rem;color:#8b949e;line-height:1.8;">
+          display: grid;<br>
+          grid-template-columns: 1fr 1fr 1fr;<br>
+          gap: 6px;
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJEMPLO COMPLETO CSS -->
+  <section>
+    <p class="section-label">// sección 06</p>
+    <h2 class="section-title">Ejemplo Completo</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dot" style="background:#ff5f56;"></div>
+        <div class="code-dot" style="background:#ffbd2e;"></div>
+        <div class="code-dot" style="background:#27c93f;"></div>
+        <span style="margin-left:8px;">styles.css</span>
+      </div>
+      <pre><span class="cs-comment">/* Variables globales */</span>
+<span class="cs-sel">:root</span> {
+  <span class="cs-prop">--rojo</span>: <span class="cs-val">#cc0000</span>;
+  <span class="cs-prop">--fondo</span>: <span class="cs-val">#111314</span>;
+  <span class="cs-prop">--blanco</span>: <span class="cs-val">#f0eeeb</span>;
+}
+
+<span class="cs-comment">/* Estilos del header */</span>
+<span class="cs-sel">header</span> {
+  <span class="cs-prop">background</span>: <span class="cs-val">var(--rojo)</span>;
+  <span class="cs-prop">padding</span>: <span class="cs-val">40px <span class="cs-unit">20px</span></span>;
+  <span class="cs-prop">text-align</span>: <span class="cs-val">center</span>;
+  <span class="cs-prop">display</span>: <span class="cs-val">flex</span>;
+  <span class="cs-prop">flex-direction</span>: <span class="cs-val">column</span>;
+  <span class="cs-prop">align-items</span>: <span class="cs-val">center</span>;
+}
+
+<span class="cs-comment">/* Título principal */</span>
+<span class="cs-sel">header h1</span> {
+  <span class="cs-prop">font-size</span>: <span class="cs-val"><span class="cs-unit">3rem</span></span>;
+  <span class="cs-prop">color</span>: <span class="cs-val">var(--blanco)</span>;
+  <span class="cs-prop">text-shadow</span>: <span class="cs-val"><span class="cs-unit">2px</span> <span class="cs-unit">2px</span> <span class="cs-unit">0</span> rgba(0,0,0,.3)</span>;
+}
+
+<span class="cs-comment">/* Cards del portafolio */</span>
+<span class="cs-sel">.card</span> {
+  <span class="cs-prop">background</span>: <span class="cs-val">var(--fondo)</span>;
+  <span class="cs-prop">border-radius</span>: <span class="cs-val"><span class="cs-unit">10px</span></span>;
+  <span class="cs-prop">box-shadow</span>: <span class="cs-val"><span class="cs-unit">0</span> <span class="cs-unit">6px</span> <span class="cs-unit">24px</span> rgba(0,0,0,.5)</span>;
+  <span class="cs-prop">transition</span>: <span class="cs-val">transform <span class="cs-unit">.25s</span> ease</span>;
+}
+
+<span class="cs-sel">.card:hover</span> {
+  <span class="cs-prop">transform</span>: <span class="cs-val">translateY(<span class="cs-unit">-6px</span>)</span>;
+  <span class="cs-prop">box-shadow</span>: <span class="cs-val"><span class="cs-unit">0</span> <span class="cs-unit">14px</span> <span class="cs-unit">36px</span> rgba(204,0,0,.3)</span>;
+}</pre>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div><p class="footer-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p></div>
+  <div class="footer-meta">
+    <p>Especialidad: <span>Inteligencia Artificial</span></p>
+    <p>Profesor: <span>Chirino Balcázar Jordy</span> &nbsp;|&nbsp; Alumno: <span>Luis Fernando</span></p>
+  </div>
+</footer>
+</body>
+</html>
