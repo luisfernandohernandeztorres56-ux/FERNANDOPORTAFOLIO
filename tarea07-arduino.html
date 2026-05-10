@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Actividad 07 – Componentes de Arduino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:        #cc0000;
+      --red-dark:   #990000;
+      --bg:         #1a1c1e;
+      --card-bg:    #2a2d31;
+      --white:      #f0f0f0;
+      --gray:       #888;
+      --ard-blue:   #00979d;
+      --ard-teal:   #00b4bb;
+      --ard-dark:   #005c5f;
+      --ard-light:  #6edde0;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HERO ── */
+    header {
+      background: linear-gradient(160deg, #001a1b 0%, #003e40 55%, #005c5f 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 60px 40px 50px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg,  rgba(0,183,190,.06) 0px, rgba(0,183,190,.06) 1px, transparent 1px, transparent 20px),
+        repeating-linear-gradient(90deg, rgba(0,183,190,.06) 0px, rgba(0,183,190,.06) 1px, transparent 1px, transparent 20px);
+      pointer-events: none;
+    }
+    /* PCB decorativo animado */
+    .pcb-icon {
+      width: 90px;
+      height: 90px;
+      margin-bottom: 8px;
+      animation: pulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 4px 20px rgba(0,183,190,.6));
+    }
+    @keyframes pulse {
+      0%,100%{ transform: scale(1); opacity:1; }
+      50%    { transform: scale(1.06); opacity:.85; }
+    }
+    .header-subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--ard-light);
+    }
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: .04em;
+      color: #fff;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.35);
+    }
+    .header-sub2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.8);
+      border: 1px solid rgba(0,183,190,.45);
+      padding: 4px 18px;
+      border-radius: 2px;
+      margin-top: 4px;
+    }
+
+    /* ── BACK BUTTON ── */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 28px 32px 0;
+      padding: 9px 22px;
+      background: transparent;
+      border: 1.5px solid var(--ard-teal);
+      color: var(--ard-teal);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      align-self: flex-start;
+    }
+    .btn-back:hover { background: var(--ard-teal); color: #001a1b; }
+    .btn-back svg  { width:16px; height:16px; fill:currentColor; flex-shrink:0; }
+
+    /* ── MAIN ── */
+    main { flex:1; padding: 40px 32px 60px; }
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--ard-teal);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .section-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: .06em;
+      color: var(--white);
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    /* ── INTRO ── */
+    .intro-box {
+      background: #162022;
+      border-left: 4px solid var(--ard-blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      font-size: .95rem;
+      line-height: 1.7;
+      color: rgba(240,240,240,.8);
+    }
+    .intro-box strong { color: var(--ard-light); }
+
+    /* ── CATEGORY TABS ── */
+    .cat-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      max-width: 900px;
+      margin: 0 auto 36px;
+    }
+    .cat-tab {
+      padding: 7px 20px;
+      background: rgba(0,151,157,.15);
+      border: 1px solid rgba(0,151,157,.35);
+      color: var(--ard-light);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .cat-tab.active,
+    .cat-tab:hover {
+      background: var(--ard-blue);
+      border-color: var(--ard-teal);
+      color: #fff;
+    }
+
+    /* ── COMPONENTS GRID ── */
+    .comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 22px;
+      max-width: 1100px;
+      margin: 0 auto 48px;
+    }
+    .comp-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+      transition: transform .25s, box-shadow .25s;
+      display: flex;
+      flex-direction: column;
+    }
+    .comp-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(0,151,157,.25), 0 0 0 1px var(--ard-blue);
+    }
+
+    /* Franja de color superior por categoría */
+    .comp-card .cat-stripe {
+      height: 4px;
+      background: var(--stripe-color, var(--ard-teal));
+    }
+
+    .comp-header {
+      padding: 16px 18px 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .comp-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+    .comp-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #e8e8e8;
+      line-height: 1.3;
+    }
+    .comp-category {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--ard-teal);
+      margin-top: 2px;
+    }
+    .comp-body {
+      padding: 14px 18px 16px;
+      font-size: .87rem;
+      line-height: 1.65;
+      color: rgba(240,238,235,.6);
+      flex: 1;
+    }
+    .comp-body strong { color: var(--ard-light); font-weight: 700; }
+    .comp-body ul { margin-top: 8px; padding-left: 16px; }
+    .comp-body li { margin-bottom: 3px; }
+
+    code {
+      background: rgba(0,151,157,.18);
+      color: var(--ard-light);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .8em;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── PINOUT / DIAGRAM SECTION ── */
+    .diagram-section {
+      max-width: 860px;
+      margin: 0 auto 50px;
+    }
+    .diagram-section h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .06em;
+      color: var(--ard-light);
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .pins-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .pin-card {
+      background: #162022;
+      border: 1px solid rgba(0,151,157,.3);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .pin-card h4 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .78rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--ard-teal);
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(0,151,157,.2);
+      padding-bottom: 6px;
+    }
+    .pin-card p {
+      font-size: .84rem;
+      color: rgba(240,240,240,.65);
+      line-height: 1.55;
+    }
+
+    /* ── CODE BLOCK ── */
+    .code-section { max-width: 800px; margin: 0 auto 48px; }
+    .code-section h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .06em;
+      color: var(--ard-light);
+      margin-bottom: 14px;
+    }
+    .code-block {
+      background: #0d1a1b;
+      border: 1px solid rgba(0,151,157,.35);
+      border-radius: 8px;
+      padding: 20px 22px;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      line-height: 1.7;
+      color: #b0e0e2;
+      white-space: pre;
+    }
+    .kw { color: #c792ea; }
+    .fn { color: #6edde0; }
+    .st { color: #c3e88d; }
+    .cm { color: #4a7a7c; font-style:italic; }
+    .nm { color: #f78c6c; }
+    .op { color: #89ddff; }
+
+    /* ── TABLE ── */
+    .table-wrap { max-width: 860px; margin: 0 auto 48px; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.88rem; }
+    th {
+      background: rgba(0,151,157,.25);
+      color: var(--ard-light);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--ard-blue);
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(240,240,240,.75);
+      vertical-align: top;
+    }
+    tr:hover td { background: rgba(0,151,157,.07); }
+    td:first-child { color: var(--ard-teal); font-weight:700; font-family:'Share Tech Mono',monospace; font-size:.82em; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0d1a1b;
+      border-top: 2px solid var(--ard-dark);
+      padding: 28px 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .footer-school {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: .08em;
+      color: var(--white);
+    }
+    .footer-detail {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      color: var(--gray);
+    }
+    .footer-detail span { color: var(--ard-teal); }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Ícono PCB/Arduino SVG -->
+  <svg class="pcb-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <!-- Placa -->
+    <rect x="5" y="15" width="90" height="70" rx="5" fill="#003e40" stroke="#00979d" stroke-width="2"/>
+    <!-- Chip central -->
+    <rect x="35" y="35" width="30" height="30" rx="3" fill="#005c5f" stroke="#00b4bb" stroke-width="1.5"/>
+    <!-- Pines del chip -->
+    <line x1="38" y1="35" x2="38" y2="28" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="45" y1="35" x2="45" y2="28" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="52" y1="35" x2="52" y2="28" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="59" y1="35" x2="59" y2="28" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="38" y1="65" x2="38" y2="72" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="45" y1="65" x2="45" y2="72" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="52" y1="65" x2="52" y2="72" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="59" y1="65" x2="59" y2="72" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="35" y1="42" x2="18" y2="42" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="35" y1="50" x2="18" y2="50" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="35" y1="58" x2="18" y2="58" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="65" y1="42" x2="82" y2="42" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="65" y1="50" x2="82" y2="50" stroke="#6edde0" stroke-width="1.5"/>
+    <line x1="65" y1="58" x2="82" y2="58" stroke="#6edde0" stroke-width="1.5"/>
+    <!-- LED -->
+    <circle cx="15" cy="25" r="4" fill="#00ff88" opacity=".8"/>
+    <circle cx="15" cy="25" r="2" fill="#00ffaa"/>
+    <!-- Puerto USB (decorativo) -->
+    <rect x="5" y="42" width="8" height="16" rx="1" fill="#004a4d" stroke="#00b4bb" stroke-width="1"/>
+    <!-- Texto -->
+    <text x="42" y="53" font-family="monospace" font-size="7" fill="#6edde0">UNO</text>
+    <!-- Pines header derecha -->
+    <rect x="82" y="20" width="6" height="60" rx="1" fill="#003a3d" stroke="#00979d" stroke-width="1"/>
+  </svg>
+
+  <p class="header-subtitle">actividad / 07</p>
+  <h1 class="header-title">Componentes de Arduino</h1>
+  <div class="header-sub2">Sensores, Actuadores y Hardware Compatible</div>
+</header>
+
+<a class="btn-back" href="index.html">
+  <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  Volver al Portafolio
+</a>
+
+<main>
+  <p class="section-label">plataforma de prototipado</p>
+  <h2 class="section-heading">¿Qué es Arduino?</h2>
+
+  <div class="intro-box">
+    <strong>Arduino</strong> es una plataforma de hardware y software de código abierto diseñada para facilitar
+    la creación de proyectos electrónicos interactivos. Consiste en una placa con un microcontrolador y un
+    entorno de desarrollo (IDE). Su gran fortaleza es el enorme ecosistema de <strong>sensores, módulos y
+    actuadores</strong> compatibles, que permiten interactuar con el mundo físico.
+  </div>
+
+  <!-- CATEGORIAS PRINCIPALES -->
+  <p class="section-label">componentes por categoría</p>
+  <h2 class="section-heading">Sensores y Hardware Compatible</h2>
+
+  <!-- SENSORES -->
+  <p class="section-label" style="text-align:left;margin-left:auto;margin-right:auto;max-width:1100px;display:block;margin-bottom:12px;">
+    ① sensores
+  </p>
+  <div class="comp-grid">
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#e74c3c;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(231,76,60,.15);">🌡️</div>
+        <div>
+          <div class="comp-title">Sensor de Temperatura y Humedad</div>
+          <div class="comp-category">Sensor ambiental</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        <strong>DHT11 / DHT22</strong> son los más populares. Miden temperatura y humedad relativa.
+        Se conectan a un pin digital y requieren la librería <code>DHT.h</code>.
+        El DHT22 tiene mayor precisión (±0.5°C) que el DHT11 (±2°C).
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#3498db;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(52,152,219,.15);">📡</div>
+        <div>
+          <div class="comp-title">Sensor Ultrasónico HC-SR04</div>
+          <div class="comp-category">Sensor de distancia</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Mide distancias de <strong>2 cm a 400 cm</strong> usando ondas ultrasónicas.
+        Pines: <code>VCC</code>, <code>GND</code>, <code>Trig</code> (disparo), <code>Echo</code> (respuesta).
+        Fórmula: <code>distancia = tiempo × 0.034 / 2</code> cm.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#f39c12;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(243,156,18,.15);">☀️</div>
+        <div>
+          <div class="comp-title">Sensor de Luz LDR</div>
+          <div class="comp-category">Sensor fotoeléctrico</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        La <strong>fotorresistencia</strong> cambia su resistencia según la intensidad de luz.
+        Se conecta en divisor de voltaje con una resistencia fija a un pin <strong>analógico</strong> (<code>A0–A5</code>).
+        Valores: oscuridad = alto, luz = bajo.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#9b59b6;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(155,89,182,.15);">🏃</div>
+        <div>
+          <div class="comp-title">Sensor de Movimiento PIR</div>
+          <div class="comp-category">Sensor de presencia</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Detecta <strong>movimiento infrarrojo</strong> de seres vivos. Tiene salida digital (HIGH/LOW).
+        Pines: <code>VCC</code>, <code>OUT</code>, <code>GND</code>.
+        Cuenta con potenciómetros para ajustar sensibilidad y tiempo de retardo.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#1abc9c;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(26,188,156,.15);">💡</div>
+        <div>
+          <div class="comp-title">Sensor de Color TCS3200</div>
+          <div class="comp-category">Sensor óptico</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Detecta el color de superficies mediante fotodiodos y filtros <strong>RGB + blanco</strong>.
+        Convierte la intensidad de luz en frecuencia. Usado en robótica para seguir líneas de colores.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#e67e22;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(230,126,34,.15);">🔥</div>
+        <div>
+          <div class="comp-title">Sensor de Gas MQ-2 / MQ-7</div>
+          <div class="comp-category">Sensor químico</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Detecta gases como <strong>humo, butano, propano, CO</strong>. Tienen salida analógica y digital.
+        Requieren un tiempo de precalentamiento (~30 s). Ideales para sistemas de alarma.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACTUADORES -->
+  <p class="section-label" style="text-align:left;margin-left:auto;margin-right:auto;max-width:1100px;display:block;margin-bottom:12px;">
+    ② actuadores
+  </p>
+  <div class="comp-grid">
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#2ecc71;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(46,204,113,.15);">⚙️</div>
+        <div>
+          <div class="comp-title">Servomotor SG90 / MG996R</div>
+          <div class="comp-category">Motor de posición</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Gira en ángulos precisos (0°–180°). Controlado por <strong>señal PWM</strong>.
+        Se usa la librería <code>Servo.h</code>. Cables: <strong>rojo</strong> (5V), <strong>marrón</strong> (GND),
+        <strong>naranja/amarillo</strong> (señal). El MG996R es metálico y más torque.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#3498db;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(52,152,219,.15);">🔄</div>
+        <div>
+          <div class="comp-title">Motor DC con Driver L298N</div>
+          <div class="comp-category">Motor de corriente continua</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Los motores DC requieren un <strong>driver</strong> como el <strong>L298N</strong> para control
+        de velocidad (PWM) y dirección. Puede manejar 2 motores simultáneamente.
+        Alimentación externa recomendada: 6–12V.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#e74c3c;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(231,76,60,.15);">🔊</div>
+        <div>
+          <div class="comp-title">Buzzer Pasivo y Activo</div>
+          <div class="comp-category">Actuador sonoro</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        El <strong>buzzer activo</strong> suena con solo aplicar voltaje. El <strong>pasivo</strong>
+        requiere señal PWM (función <code>tone()</code>) y permite generar distintas frecuencias/melodías.
+        Se conecta a cualquier pin digital.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#f39c12;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(243,156,18,.15);">🖥️</div>
+        <div>
+          <div class="comp-title">Pantalla LCD 16×2 (con I²C)</div>
+          <div class="comp-category">Módulo de visualización</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Muestra texto en 2 filas de 16 caracteres. Con el módulo <strong>I²C</strong> solo se necesitan
+        2 cables de datos (<code>SDA</code>, <code>SCL</code>). Librería: <code>LiquidCrystal_I2C.h</code>.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#9b59b6;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(155,89,182,.15);">💧</div>
+        <div>
+          <div class="comp-title">Relay de 5V</div>
+          <div class="comp-category">Control de cargas</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Permite a Arduino controlar <strong>cargas de alto voltaje</strong> (110V / 220V AC) con señales de 5V.
+        Pines: <code>VCC</code>, <code>GND</code>, <code>IN</code>. Módulos de 1, 2, 4 y 8 relays disponibles.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#00979d;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(0,151,157,.15);">🌈</div>
+        <div>
+          <div class="comp-title">Tira LED RGB (NeoPixel WS2812B)</div>
+          <div class="comp-category">Actuador lumínico</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        LEDs RGB individualmente direccionables. Con la librería <code>FastLED</code> o <code>Adafruit NeoPixel</code>
+        se controla cada LED con un solo pin de datos. Permiten efectos visuales complejos con poco código.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MÓDULOS DE COMUNICACIÓN -->
+  <p class="section-label" style="text-align:left;margin-left:auto;margin-right:auto;max-width:1100px;display:block;margin-bottom:12px;">
+    ③ módulos de comunicación
+  </p>
+  <div class="comp-grid">
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#3498db;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(52,152,219,.15);">📶</div>
+        <div>
+          <div class="comp-title">Módulo WiFi ESP8266 / ESP32</div>
+          <div class="comp-category">Comunicación inalámbrica</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        El <strong>ESP8266</strong> y el <strong>ESP32</strong> añaden conectividad WiFi (y Bluetooth en ESP32).
+        Pueden usarse como shield o ejecutar código propio. Clave para proyectos <strong>IoT</strong>.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#1abc9c;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(26,188,156,.15);">📲</div>
+        <div>
+          <div class="comp-title">Módulo Bluetooth HC-05 / HC-06</div>
+          <div class="comp-category">Comunicación Bluetooth</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Permite comunicación <strong>serial inalámbrica</strong> con teléfonos y computadoras vía Bluetooth.
+        El <strong>HC-05</strong> puede actuar como maestro o esclavo; el <strong>HC-06</strong> solo como esclavo.
+        Comunicación a 9600 bps por defecto.
+      </div>
+    </div>
+
+    <div class="comp-card">
+      <div class="cat-stripe" style="--stripe-color:#e74c3c;"></div>
+      <div class="comp-header">
+        <div class="comp-icon" style="background:rgba(231,76,60,.15);">🏷️</div>
+        <div>
+          <div class="comp-title">Módulo RFID RC522</div>
+          <div class="comp-category">Identificación por radiofrecuencia</div>
+        </div>
+      </div>
+      <div class="comp-body">
+        Lee y escribe tarjetas y llaveros <strong>RFID a 13.56 MHz</strong>. Protocolo SPI.
+        Librería: <code>MFRC522.h</code>. Muy usado en sistemas de control de acceso y asistencia.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PINOUT ARDUINO UNO -->
+  <div class="diagram-section">
+    <h3>Pines del Arduino UNO R3</h3>
+    <div class="pins-grid">
+      <div class="pin-card">
+        <h4>Pines Digitales D0–D13</h4>
+        <p>Entrada/salida digital (HIGH = 5V, LOW = 0V). D3, D5, D6, D9, D10, D11 admiten <strong>PWM (~)</strong> para señales analógicas.</p>
+      </div>
+      <div class="pin-card">
+        <h4>Pines Analógicos A0–A5</h4>
+        <p>Lectura analógica de 0–5V con resolución de <strong>10 bits</strong> (0 a 1023). También pueden usarse como digitales.</p>
+      </div>
+      <div class="pin-card">
+        <h4>Alimentación 5V / 3.3V / VIN</h4>
+        <p><strong>5V</strong>: salida regulada. <strong>3.3V</strong>: 150 mA máx. <strong>VIN</strong>: entrada de 7–12V para fuente externa. <strong>GND</strong>: tierra.</p>
+      </div>
+      <div class="pin-card">
+        <h4>Pines I²C (SDA / SCL)</h4>
+        <p><strong>SDA</strong> = A4, <strong>SCL</strong> = A5. Protocolo serial de 2 hilos para múltiples dispositivos en el mismo bus.</p>
+      </div>
+      <div class="pin-card">
+        <h4>Pines SPI (MOSI/MISO/SCK/SS)</h4>
+        <p>D11 (MOSI), D12 (MISO), D13 (SCK), D10 (SS). Protocolo de alta velocidad para pantallas, SD cards, RFID.</p>
+      </div>
+      <div class="pin-card">
+        <h4>Puerto Serial (TX / RX)</h4>
+        <p><strong>D0 (RX)</strong> y <strong>D1 (TX)</strong>. Comunicación serie con PC y módulos como HC-05. Usados por el Serial Monitor.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- EJEMPLO DE CÓDIGO -->
+  <div class="code-section">
+    <h3>Ejemplo: Sensor DHT11 + Pantalla LCD</h3>
+    <div class="code-block"><pre><span class="cm">// ──────────────────────────────────────────
+//  Sensor DHT11 + LCD I2C en Arduino
+// ──────────────────────────────────────────</span>
+<span class="kw">#include</span> <span class="st">&lt;DHT.h&gt;</span>
+<span class="kw">#include</span> <span class="st">&lt;LiquidCrystal_I2C.h&gt;</span>
+
+<span class="kw">#define</span> DHTPIN    <span class="nm">2</span>
+<span class="kw">#define</span> DHTTYPE   DHT11
+
+DHT dht(DHTPIN, DHTTYPE);
+LiquidCrystal_I2C lcd(<span class="nm">0x27</span>, <span class="nm">16</span>, <span class="nm">2</span>);  <span class="cm">// dirección I²C, 16 cols, 2 filas</span>
+
+<span class="kw">void</span> <span class="fn">setup</span>() {
+  dht.<span class="fn">begin</span>();
+  lcd.<span class="fn">init</span>();
+  lcd.<span class="fn">backlight</span>();
+  lcd.<span class="fn">print</span>(<span class="st">"Temp y Humedad"</span>);
+}
+
+<span class="kw">void</span> <span class="fn">loop</span>() {
+  <span class="kw">float</span> temp <span class="op">=</span> dht.<span class="fn">readTemperature</span>();  <span class="cm">// °C</span>
+  <span class="kw">float</span> hum  <span class="op">=</span> dht.<span class="fn">readHumidity</span>();
+
+  <span class="kw">if</span> (<span class="fn">isnan</span>(temp) <span class="op">||</span> <span class="fn">isnan</span>(hum)) {
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>, <span class="nm">1</span>);
+    lcd.<span class="fn">print</span>(<span class="st">"Error sensor"</span>);
+  } <span class="kw">else</span> {
+    lcd.<span class="fn">setCursor</span>(<span class="nm">0</span>, <span class="nm">1</span>);
+    lcd.<span class="fn">print</span>(<span class="st">"T:"</span>);
+    lcd.<span class="fn">print</span>(temp, <span class="nm">1</span>);
+    lcd.<span class="fn">print</span>(<span class="st">" H:"</span>);
+    lcd.<span class="fn">print</span>(hum, <span class="nm">0</span>);
+    lcd.<span class="fn">print</span>(<span class="st">"%"</span>);
+  }
+
+  <span class="fn">delay</span>(<span class="nm">2000</span>);  <span class="cm">// esperar 2 segundos entre lecturas</span>
+}</pre></div>
+  </div>
+
+  <!-- TABLA RESUMEN -->
+  <p class="section-label" style="text-align:center;">referencia rápida</p>
+  <h2 class="section-heading" style="text-align:center;">Tabla de Componentes Clave</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Componente</th>
+          <th>Tipo</th>
+          <th>Interfaz</th>
+          <th>Voltaje</th>
+          <th>Uso principal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DHT11 / DHT22</td>
+          <td>Sensor</td>
+          <td>Digital</td>
+          <td>3.3–5V</td>
+          <td>Temperatura y humedad ambiental</td>
+        </tr>
+        <tr>
+          <td>HC-SR04</td>
+          <td>Sensor</td>
+          <td>Digital (2 pines)</td>
+          <td>5V</td>
+          <td>Medición de distancia por ultrasonido</td>
+        </tr>
+        <tr>
+          <td>PIR HC-SR501</td>
+          <td>Sensor</td>
+          <td>Digital</td>
+          <td>5V</td>
+          <td>Detección de movimiento / presencia</td>
+        </tr>
+        <tr>
+          <td>MQ-2</td>
+          <td>Sensor</td>
+          <td>Analógico + Digital</td>
+          <td>5V</td>
+          <td>Detección de gases y humo</td>
+        </tr>
+        <tr>
+          <td>Servomotor SG90</td>
+          <td>Actuador</td>
+          <td>PWM</td>
+          <td>5V</td>
+          <td>Control angular de posición (0°–180°)</td>
+        </tr>
+        <tr>
+          <td>Driver L298N</td>
+          <td>Módulo</td>
+          <td>Digital + PWM</td>
+          <td>5–35V</td>
+          <td>Control de motores DC y paso a paso</td>
+        </tr>
+        <tr>
+          <td>LCD 16×2 I²C</td>
+          <td>Pantalla</td>
+          <td>I²C (A4/A5)</td>
+          <td>5V</td>
+          <td>Visualización de texto y datos</td>
+        </tr>
+        <tr>
+          <td>HC-05</td>
+          <td>Comunicación</td>
+          <td>UART Serial</td>
+          <td>3.6–6V</td>
+          <td>Comunicación Bluetooth con móvil/PC</td>
+        </tr>
+        <tr>
+          <td>ESP8266 / ESP32</td>
+          <td>Módulo WiFi</td>
+          <td>UART / SPI / I²C</td>
+          <td>3.3V</td>
+          <td>Conectividad WiFi e IoT</td>
+        </tr>
+        <tr>
+          <td>Relay 5V</td>
+          <td>Actuador</td>
+          <td>Digital</td>
+          <td>5V control / 250V AC carga</td>
+          <td>Control de cargas de alto voltaje</td>
+        </tr>
+        <tr>
+          <td>RFID RC522</td>
+          <td>Módulo</td>
+          <td>SPI</td>
+          <td>3.3V</td>
+          <td>Lectura de tarjetas / control de acceso</td>
+        </tr>
+        <tr>
+          <td>WS2812B (NeoPixel)</td>
+          <td>LED RGB</td>
+          <td>Digital (1 pin)</td>
+          <td>5V</td>
+          <td>Efectos de iluminación RGB individual</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <p class="footer-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p>
+  <p class="footer-detail">Especialidad: <span>Inteligencia Artificial</span></p>
+  <p class="footer-detail">Profesor: <span>Chirino Balcázar Jordy</span></p>
+</footer>
+
+</body>
+</html>

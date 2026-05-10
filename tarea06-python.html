@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Actividad 06 – Conceptos Generales de Python</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --red:       #cc0000;
+      --red-dark:  #990000;
+      --red-light: #ff2222;
+      --bg:        #1a1c1e;
+      --card-bg:   #2a2d31;
+      --accent:    #ff4444;
+      --white:     #f0f0f0;
+      --gray:      #888;
+      --py-blue:   #3776ab;
+      --py-yellow: #ffd343;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Rajdhani', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HERO ── */
+    header {
+      background: linear-gradient(160deg, #1a2a4a 0%, #1c3a6e 55%, #2255a0 100%);
+      position: relative;
+      overflow: hidden;
+      padding: 60px 40px 50px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg,  rgba(255,211,67,.04) 0px, rgba(255,211,67,.04) 1px, transparent 1px, transparent 22px),
+        repeating-linear-gradient(90deg, rgba(255,211,67,.04) 0px, rgba(255,211,67,.04) 1px, transparent 1px, transparent 22px);
+      pointer-events: none;
+    }
+    /* Logotipo SVG Python decorativo */
+    .py-logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 8px;
+      filter: drop-shadow(0 4px 18px rgba(55,118,171,.7));
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100%{ transform: translateY(0); }
+      50%    { transform: translateY(-8px); }
+    }
+    .header-subtitle {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: rgba(255,211,67,.85);
+    }
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3rem, 9vw, 5.5rem);
+      line-height: 1;
+      letter-spacing: .04em;
+      color: #fff;
+      text-shadow: 3px 3px 0 rgba(0,0,0,.35);
+    }
+    .header-sub2 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.8);
+      border: 1px solid rgba(255,211,67,.4);
+      padding: 4px 18px;
+      border-radius: 2px;
+      margin-top: 4px;
+    }
+
+    /* ── BACK BUTTON ── */
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 28px 32px 0;
+      padding: 9px 22px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      align-self: flex-start;
+    }
+    .btn-back:hover { background: var(--accent); color: #fff; }
+    .btn-back svg  { width:16px; height:16px; fill:currentColor; flex-shrink:0; }
+
+    /* ── MAIN ── */
+    main { flex:1; padding: 40px 32px 60px; }
+    .section-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .7rem;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--py-yellow);
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .section-heading {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: .06em;
+      color: var(--white);
+      margin-bottom: 36px;
+      text-align: center;
+    }
+
+    /* ── INTRO BOX ── */
+    .intro-box {
+      background: #22283a;
+      border-left: 4px solid var(--py-blue);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      max-width: 800px;
+      margin: 0 auto 40px;
+      font-size: .95rem;
+      line-height: 1.7;
+      color: rgba(240,240,240,.8);
+    }
+    .intro-box strong { color: var(--py-yellow); }
+
+    /* ── CONCEPT CARDS ── */
+    .concepts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto 48px;
+    }
+    .concept-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.05);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .concept-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(55,118,171,.3), 0 0 0 1px var(--py-blue);
+    }
+    .concept-header {
+      padding: 16px 18px 10px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+    }
+    .concept-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      flex-shrink: 0;
+    }
+    .concept-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #e8e8e8;
+    }
+    .concept-body {
+      padding: 14px 18px 18px;
+      font-size: .87rem;
+      line-height: 1.65;
+      color: rgba(240,238,235,.6);
+    }
+    .concept-body strong { color: var(--py-yellow); font-weight: 700; }
+
+    /* código inline */
+    code {
+      background: rgba(55,118,171,.18);
+      color: #7ec8e3;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82em;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    /* ── CODE BLOCKS ── */
+    .code-section { max-width: 800px; margin: 0 auto 48px; }
+    .code-section h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: .06em;
+      color: var(--py-yellow);
+      margin-bottom: 14px;
+    }
+    .code-block {
+      background: #161b22;
+      border: 1px solid rgba(55,118,171,.35);
+      border-radius: 8px;
+      padding: 20px 22px;
+      overflow-x: auto;
+    }
+    .code-block pre {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .82rem;
+      line-height: 1.7;
+      color: #d0e8ff;
+      white-space: pre;
+    }
+    .kw  { color: #c792ea; }   /* keyword */
+    .fn  { color: #82aaff; }   /* function */
+    .st  { color: #c3e88d; }   /* string */
+    .cm  { color: #546e7a; font-style: italic; } /* comment */
+    .nm  { color: #f78c6c; }   /* number */
+    .op  { color: #89ddff; }   /* operator */
+
+    /* ── COMPARISON TABLE ── */
+    .table-wrap { max-width: 800px; margin: 0 auto 48px; overflow-x:auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .88rem;
+    }
+    th {
+      background: rgba(55,118,171,.3);
+      color: var(--py-yellow);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .75rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--py-blue);
+    }
+    td {
+      padding: 11px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      color: rgba(240,240,240,.75);
+      vertical-align: top;
+    }
+    tr:hover td { background: rgba(55,118,171,.08); }
+    td:first-child { color: var(--py-yellow); font-weight: 700; font-family:'Share Tech Mono',monospace; font-size:.82em; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #111315;
+      border-top: 2px solid #1a3a6e;
+      padding: 28px 32px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+    .footer-school {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: .08em;
+      color: var(--white);
+    }
+    .footer-detail {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      color: var(--gray);
+    }
+    .footer-detail span { color: var(--py-yellow); }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Logo SVG Python -->
+  <svg class="py-logo" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="pyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#5a9fd4"/>
+        <stop offset="100%" stop-color="#306998"/>
+      </linearGradient>
+      <linearGradient id="pyYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#ffd343"/>
+        <stop offset="100%" stop-color="#ffa500"/>
+      </linearGradient>
+    </defs>
+    <!-- cuerpo superior (azul) -->
+    <path fill="url(#pyBlue)"
+      d="M54.9 5C41.1 5 42.5 11 42.5 11L42.5 27.3 55.7 27.3 55.7 31.5 29 31.5C29 31.5 20 30.3 20 44.2 20 58.1 28 57.3 28 57.3L33 57.3 33 50.7C33 50.7 32.7 43 40.2 43L67.3 43C67.3 43 74.3 43.1 74.3 36.4L74.3 14.7C74.3 14.7 75.4 5 54.9 5Z
+      M41.9 12C43.7 12 45.2 13.5 45.2 15.4 45.2 17.3 43.7 18.8 41.9 18.8 40 18.8 38.5 17.3 38.5 15.4 38.5 13.5 40 12 41.9 12Z"/>
+    <!-- cuerpo inferior (amarillo) -->
+    <path fill="url(#pyYellow)"
+      d="M55.5 105C69.3 105 67.9 99 67.9 99L67.9 82.7 54.7 82.7 54.7 78.5 81.4 78.5C81.4 78.5 90.4 79.7 90.4 65.8 90.4 51.9 82.4 52.7 82.4 52.7L77.4 52.7 77.4 59.3C77.4 59.3 77.7 67 70.2 67L43.1 67C43.1 67 36.1 66.9 36.1 73.6L36.1 95.3C36.1 95.3 35 105 55.5 105Z
+      M68.5 98C66.7 98 65.2 96.5 65.2 94.6 65.2 92.7 66.7 91.2 68.5 91.2 70.4 91.2 71.9 92.7 71.9 94.6 71.9 96.5 70.4 98 68.5 98Z"/>
+  </svg>
+
+  <p class="header-subtitle">actividad / 06</p>
+  <h1 class="header-title">Conceptos Generales de Python</h1>
+  <div class="header-sub2">Cultura Digital 2 · Inteligencia Artificial</div>
+</header>
+
+<a class="btn-back" href="index.html">
+  <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+  Volver al Portafolio
+</a>
+
+<main>
+  <p class="section-label">lenguaje de programación</p>
+  <h2 class="section-heading">¿Qué es Python?</h2>
+
+  <div class="intro-box">
+    <strong>Python</strong> es un lenguaje de programación de alto nivel, interpretado y de propósito general creado por
+    <strong>Guido van Rossum</strong> en 1991. Es conocido por su sintaxis clara, legible y concisa, lo que lo convierte
+    en uno de los lenguajes más populares del mundo. Se usa ampliamente en desarrollo web, ciencia de datos,
+    inteligencia artificial, automatización y más.
+  </div>
+
+  <!-- ── CONCEPTOS PRINCIPALES ── -->
+  <p class="section-label" style="margin-top:10px;">conceptos clave</p>
+  <h2 class="section-heading">Fundamentos del Lenguaje</h2>
+
+  <div class="concepts-grid">
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(55,118,171,.2);">🐍</div>
+        <span class="concept-title">Variables y Tipos de Datos</span>
+      </div>
+      <div class="concept-body">
+        En Python <strong>no se declara el tipo</strong> de una variable; se infiere automáticamente.
+        Los tipos principales son <code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>,
+        <code>list</code>, <code>tuple</code>, <code>dict</code> y <code>set</code>.
+        Se asignan con el operador <code>=</code>.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(255,211,67,.15);">📦</div>
+        <span class="concept-title">Listas, Tuplas y Diccionarios</span>
+      </div>
+      <div class="concept-body">
+        <strong>Listas</strong> (<code>[]</code>) son mutables y ordenadas.
+        <strong>Tuplas</strong> (<code>()</code>) son inmutables.
+        <strong>Diccionarios</strong> (<code>{}</code>) almacenan pares <code>clave: valor</code> y son muy útiles para estructurar datos.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(130,170,255,.15);">🔁</div>
+        <span class="concept-title">Estructuras de Control</span>
+      </div>
+      <div class="concept-body">
+        Python usa <code>if / elif / else</code> para condiciones, y los bucles
+        <code>for</code> (iteración) y <code>while</code> (condición).
+        La <strong>indentación</strong> (espacios) define los bloques de código; no se usan llaves.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(195,232,141,.15);">⚙️</div>
+        <span class="concept-title">Funciones</span>
+      </div>
+      <div class="concept-body">
+        Se definen con <code>def nombre():</code>. Pueden recibir parámetros, valores por defecto
+        y devolver resultados con <code>return</code>. Las funciones lambda (<code>lambda x: x*2</code>)
+        son funciones anónimas de una sola línea.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(247,140,108,.15);">🏛️</div>
+        <span class="concept-title">Programación Orientada a Objetos</span>
+      </div>
+      <div class="concept-body">
+        Python soporta <strong>POO</strong> con <code>class</code>. Los objetos tienen atributos y métodos.
+        Conceptos como <strong>herencia</strong>, <strong>encapsulamiento</strong> y <strong>polimorfismo</strong>
+        son totalmente soportados. El constructor es el método <code>__init__</code>.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(200,100,200,.15);">📂</div>
+        <span class="concept-title">Módulos y Librerías</span>
+      </div>
+      <div class="concept-body">
+        Con <code>import</code> se importan módulos. Python cuenta con una
+        <strong>biblioteca estándar</strong> enorme (<code>math</code>, <code>os</code>, <code>datetime</code>…)
+        y librerías externas como <strong>NumPy</strong>, <strong>Pandas</strong> y <strong>Flask</strong>
+        instalables con <code>pip</code>.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(255,68,68,.15);">⚠️</div>
+        <span class="concept-title">Manejo de Excepciones</span>
+      </div>
+      <div class="concept-body">
+        Los errores se gestionan con bloques <code>try / except / finally</code>.
+        Esto permite que el programa continúe ejecutándose aun cuando ocurra un error inesperado,
+        mejorando la robustez del código.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(100,200,150,.15);">📖</div>
+        <span class="concept-title">Comprensiones de Lista</span>
+      </div>
+      <div class="concept-body">
+        Sintaxis compacta para crear listas: <code>[x*2 for x in range(5)]</code>.
+        También existen comprensiones de <strong>diccionarios</strong> y <strong>conjuntos</strong>.
+        Son más eficientes y legibles que los bucles equivalentes.
+      </div>
+    </div>
+
+    <div class="concept-card">
+      <div class="concept-header">
+        <div class="concept-icon" style="background:rgba(55,118,171,.2);">🧠</div>
+        <span class="concept-title">Decoradores</span>
+      </div>
+      <div class="concept-body">
+        Son funciones que modifican el comportamiento de otra función.
+        Se aplican con <code>@nombre_decorador</code> encima de la función.
+        Muy usados en frameworks como <strong>Flask</strong> para definir rutas web.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── EJEMPLO DE CÓDIGO ── -->
+  <div class="code-section">
+    <h3>Ejemplo práctico: variables y estructuras</h3>
+    <div class="code-block"><pre><span class="cm"># ──────────────────────────────────────────
+#  Conceptos básicos de Python
+# ──────────────────────────────────────────</span>
+
+<span class="cm"># 1. Variables y tipos</span>
+nombre  <span class="op">=</span> <span class="st">"Luis Fernando"</span>
+edad    <span class="op">=</span> <span class="nm">17</span>
+promedio<span class="op">=</span> <span class="nm">9.5</span>
+activo  <span class="op">=</span> <span class="kw">True</span>
+
+<span class="cm"># 2. Lista y diccionario</span>
+materias <span class="op">=</span> [<span class="st">"Matemáticas"</span>, <span class="st">"Python"</span>, <span class="st">"Arduino"</span>]
+alumno   <span class="op">=</span> {<span class="st">"nombre"</span>: nombre, <span class="st">"edad"</span>: edad, <span class="st">"promedio"</span>: promedio}
+
+<span class="cm"># 3. Estructuras de control</span>
+<span class="kw">for</span> materia <span class="kw">in</span> materias:
+    <span class="fn">print</span>(<span class="st">f"Cursando: </span>{materia}<span class="st">"</span>)
+
+<span class="kw">if</span> promedio <span class="op">&gt;=</span> <span class="nm">9</span>:
+    <span class="fn">print</span>(<span class="st">"¡Excelente promedio!"</span>)
+<span class="kw">elif</span> promedio <span class="op">&gt;=</span> <span class="nm">7</span>:
+    <span class="fn">print</span>(<span class="st">"Buen promedio"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"Sigue esforzándote"</span>)
+
+<span class="cm"># 4. Función</span>
+<span class="kw">def</span> <span class="fn">saludar</span>(nombre, formal<span class="op">=</span><span class="kw">False</span>):
+    <span class="kw">if</span> formal:
+        <span class="kw">return</span> <span class="st">f"Buenos días, </span>{nombre}<span class="st">."</span>
+    <span class="kw">return</span> <span class="st">f"¡Hola, </span>{nombre}<span class="st">!"</span>
+
+<span class="fn">print</span>(<span class="fn">saludar</span>(nombre))
+<span class="fn">print</span>(<span class="fn">saludar</span>(nombre, formal<span class="op">=</span><span class="kw">True</span>))
+
+<span class="cm"># 5. Comprensión de lista</span>
+cuadrados <span class="op">=</span> [x<span class="op">**</span><span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>, <span class="nm">6</span>)]
+<span class="fn">print</span>(cuadrados)  <span class="cm"># [1, 4, 9, 16, 25]</span></pre></div>
+  </div>
+
+  <!-- ── EJEMPLO POO ── -->
+  <div class="code-section">
+    <h3>Ejemplo: Clase y Objetos (POO)</h3>
+    <div class="code-block"><pre><span class="kw">class</span> <span class="fn">Alumno</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, nombre, grado):
+        self.nombre <span class="op">=</span> nombre
+        self.grado  <span class="op">=</span> grado
+        self.notas  <span class="op">=</span> []
+
+    <span class="kw">def</span> <span class="fn">agregar_nota</span>(self, nota):
+        self.notas.<span class="fn">append</span>(nota)
+
+    <span class="kw">def</span> <span class="fn">promedio</span>(self):
+        <span class="kw">return</span> <span class="fn">sum</span>(self.notas) <span class="op">/</span> <span class="fn">len</span>(self.notas)
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> <span class="st">f"</span>{self.nombre}<span class="st"> | Grado: </span>{self.grado}<span class="st"> | Promedio: </span>{self.<span class="fn">promedio</span>():.1f}<span class="st">"</span>
+
+
+<span class="cm"># Crear objeto</span>
+lf <span class="op">=</span> <span class="fn">Alumno</span>(<span class="st">"Luis Fernando"</span>, <span class="st">"5° Semestre"</span>)
+lf.<span class="fn">agregar_nota</span>(<span class="nm">9.5</span>)
+lf.<span class="fn">agregar_nota</span>(<span class="nm">10</span>)
+lf.<span class="fn">agregar_nota</span>(<span class="nm">9</span>)
+<span class="fn">print</span>(lf)
+<span class="cm"># Luis Fernando | Grado: 5° Semestre | Promedio: 9.5</span></pre></div>
+  </div>
+
+  <!-- ── TABLA TIPOS DE DATOS ── -->
+  <p class="section-label" style="text-align:center;">referencia rápida</p>
+  <h2 class="section-heading" style="text-align:center;">Tipos de Datos en Python</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Ejemplo</th>
+          <th>Descripción</th>
+          <th>Mutable</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>int</td>
+          <td><code>42</code></td>
+          <td>Número entero sin decimales</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>float</td>
+          <td><code>3.14</code></td>
+          <td>Número con punto decimal</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>str</td>
+          <td><code>"hola"</code></td>
+          <td>Cadena de texto (caracteres)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>bool</td>
+          <td><code>True / False</code></td>
+          <td>Valor lógico verdadero o falso</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>list</td>
+          <td><code>[1, 2, 3]</code></td>
+          <td>Colección ordenada y modificable</td>
+          <td>Sí</td>
+        </tr>
+        <tr>
+          <td>tuple</td>
+          <td><code>(1, 2, 3)</code></td>
+          <td>Colección ordenada e inmutable</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>dict</td>
+          <td><code>{"a": 1}</code></td>
+          <td>Pares clave-valor, acceso rápido</td>
+          <td>Sí</td>
+        </tr>
+        <tr>
+          <td>set</td>
+          <td><code>{1, 2, 3}</code></td>
+          <td>Conjunto sin duplicados</td>
+          <td>Sí</td>
+        </tr>
+        <tr>
+          <td>NoneType</td>
+          <td><code>None</code></td>
+          <td>Ausencia de valor (nulo)</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  <p class="footer-school">Centro de Bachillerato Tecnológico Industrial y de Servicios 144</p>
+  <p class="footer-detail">Especialidad: <span>Inteligencia Artificial</span></p>
+  <p class="footer-detail">Profesor: <span>Chirino Balcázar Jordy</span></p>
+</footer>
+
+</body>
+</html>
